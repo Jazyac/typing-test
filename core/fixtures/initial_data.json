@@ -1,0 +1,56 @@
+[
+    {
+        "model": "core.textsample",
+        "pk": 1,
+        "fields": {
+            "game_type": "PARAGRAPH",
+            "content": "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the English alphabet at least once. Pangrams are often used to display font samples and test keyboards and printers. While they may not always make perfect sense, they serve their purpose well.",
+            "difficulty": "EASY"
+        }
+    },
+    {
+        "model": "core.textsample",
+        "pk": 2,
+        "fields": {
+            "game_type": "PARAGRAPH",
+            "content": "In computer science, artificial intelligence (AI) is intelligence demonstrated by machines, as opposed to natural intelligence displayed by animals including humans. Leading AI textbooks define the field as the study of intelligent agents: any system that perceives its environment and takes actions that maximize its chance of achieving its goals.",
+            "difficulty": "MEDIUM"
+        }
+    },
+    {
+        "model": "core.textsample",
+        "pk": 3,
+        "fields": {
+            "game_type": "CODE",
+            "content": "def fibonacci(n):\n    if n <= 1:\n        return n\n    else:\n        return fibonacci(n-1) + fibonacci(n-2)\n\nfor i in range(10):\n    print(fibonacci(i))",
+            "difficulty": "EASY"
+        }
+    },
+    {
+        "model": "core.textsample",
+        "pk": 4,
+        "fields": {
+            "game_type": "CODE",
+            "content": "class BinarySearchTree:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\n    def insert(self, value):\n        if value < self.value:\n            if self.left is None:\n                self.left = BinarySearchTree(value)\n            else:\n                self.left.insert(value)\n        else:\n            if self.right is None:\n                self.right = BinarySearchTree(value)\n            else:\n                self.right.insert(value)",
+            "difficulty": "MEDIUM"
+        }
+    },
+    {
+        "model": "core.textsample",
+        "pk": 5,
+        "fields": {
+            "game_type": "WORDS",
+            "content": "python django database server client browser network security protocol interface",
+            "difficulty": "EASY"
+        }
+    },
+    {
+        "model": "core.textsample",
+        "pk": 6,
+        "fields": {
+            "game_type": "WORDS",
+            "content": "implementation synchronization authentication authorization middleware deployment configuration optimization",
+            "difficulty": "MEDIUM"
+        }
+    }
+] 

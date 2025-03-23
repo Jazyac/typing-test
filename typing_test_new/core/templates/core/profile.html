@@ -1,0 +1,123 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Profile - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Welcome, {{ user.username }}!</h1>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average WPM</h5>
+                    <p class="display-6">{{ avg_wpm|floatformat:1 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average Accuracy</h5>
+                    <p class="display-6">{{ avg_accuracy|floatformat:1 }}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tests Completed</h5>
+                    <p class="display-6">{{ total_tests }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recent Tests</h3>
+                </div>
+                <div class="card-body">
+                    {% if recent_tests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>WPM</th>
+                                        <th>Accuracy</th>
+                                        <th>Errors</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for test in recent_tests %}
+                                    <tr>
+                                        <td>{{ test.timestamp|date:"M d, Y H:i" }}</td>
+                                        <td>{{ test.game_type }}</td>
+                                        <td>{{ test.wpm }}</td>
+                                        <td>{{ test.accuracy }}%</td>
+                                        <td>{{ test.errors }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-center">No tests completed yet. <a href="{% url 'home' %}">Start practicing!</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Progress by Game Type</h3>
+                </div>
+                <div class="card-body">
+                    {% for type, stats in type_stats.items %}
+                    <div class="mb-3">
+                        <h5>{{ type }}</h5>
+                        <p>
+                            Tests: {{ stats.count }}<br>
+                            Average WPM: {{ stats.avg_wpm|floatformat:1 }}<br>
+                            Best WPM: {{ stats.max_wpm|default:0 }}<br>
+                            Average Accuracy: {{ stats.avg_accuracy|floatformat:1 }}%
+                        </p>
+                    </div>
+                    {% empty %}
+                    <p>No statistics available yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Personal Bests</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Highest WPM</h5>
+                    <p>{{ best_wpm }} WPM ({{ best_wpm_date|date:"M d, Y" }})</p>
+
+                    <h5>Best Accuracy</h5>
+                    <p>{{ best_accuracy }}% ({{ best_accuracy_date|date:"M d, Y" }})</p>
+
+                    <h5>Longest Streak</h5>
+                    <p>{{ longest_streak }} days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

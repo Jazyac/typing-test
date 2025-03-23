@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Overall Stats</h2>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <h6 class="mb-1">Total Tests</h6>
+                        <p class="mb-0 display-6">{{ stats.total_tests }}</p>
+                    </div>
+                    <div class="list-group-item">
+                        <h6 class="mb-1">Average WPM</h6>
+                        <p class="mb-0 display-6">{{ stats.avg_wpm|floatformat:1 }}</p>
+                    </div>
+                    <div class="list-group-item">
+                        <h6 class="mb-1">Best WPM</h6>
+                        <p class="mb-0 display-6">{{ stats.max_wpm }}</p>
+                    </div>
+                    <div class="list-group-item">
+                        <h6 class="mb-1">Average Accuracy</h6>
+                        <p class="mb-0 display-6">{{ stats.avg_accuracy|floatformat:1 }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Recent Tests</h2>
+                {% if recent_tests %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Game Type</th>
+                                <th>WPM</th>
+                                <th>Accuracy</th>
+                                <th>Errors</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test in recent_tests %}
+                            <tr>
+                                <td>{{ test.timestamp|date:"M d, Y H:i" }}</td>
+                                <td>{{ test.get_game_type_display }}</td>
+                                <td>{{ test.wpm }}</td>
+                                <td>{{ test.accuracy }}%</td>
+                                <td>{{ test.errors }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center mt-4">No tests completed yet. <a href="{% url 'home' %}">Start your first test!</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{% url 'home' %}" class="btn btn-primary">Take Another Test</a>
+</div>
+{% endblock %} 

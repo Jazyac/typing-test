@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 mb-4">Welcome to Typing Speed Test</h1>
+    <p class="lead">Choose a game mode to start testing your typing skills!</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Random Words</h5>
+                <p class="card-text">Practice typing with a selection of common words. Great for improving your basic typing speed.</p>
+                <a href="{% url 'game' 'WORDS' %}" class="btn btn-primary">Start Test</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Paragraph</h5>
+                <p class="card-text">Test your typing skills with complete paragraphs. Perfect for practicing real-world typing scenarios.</p>
+                <a href="{% url 'game' 'PARAGRAPH' %}" class="btn btn-primary">Start Test</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Code Snippet</h5>
+                <p class="card-text">Challenge yourself with programming code snippets. Ideal for developers wanting to improve coding speed.</p>
+                <a href="{% url 'game' 'CODE' %}" class="btn btn-primary">Start Test</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="text-center mt-5">
+    <h2>Your Stats</h2>
+    <p>View your detailed statistics and progress in your <a href="{% url 'profile' %}">profile</a>.</p>
+</div>
+{% else %}
+<div class="text-center mt-5">
+    <h2>Track Your Progress</h2>
+    <p><a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}">login</a> to save your results and track your progress!</p>
+</div>
+{% endif %}
+{% endblock %} 

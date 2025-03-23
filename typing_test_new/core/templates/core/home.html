@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1>Welcome to Typing Speed Test</h1>
+        <p class="lead">Choose a game mode to start practicing your typing skills!</p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Random Words</h3>
+                    <p class="card-text">Practice typing with random words. Great for improving general typing speed.</p>
+                    <a href="{% url 'game' 'words' %}" class="btn btn-primary">Start Words Test</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Paragraph</h3>
+                    <p class="card-text">Type complete paragraphs to practice real-world typing scenarios.</p>
+                    <a href="{% url 'game' 'paragraph' %}" class="btn btn-primary">Start Paragraph Test</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Code Snippet</h3>
+                    <p class="card-text">Practice typing code snippets to improve your programming speed.</p>
+                    <a href="{% url 'game' 'code' %}" class="btn btn-primary">Start Code Test</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="text-center mt-5">
+        <p>View your typing statistics and progress in your <a href="{% url 'profile' %}">profile</a>.</p>
+    </div>
+    {% else %}
+    <div class="text-center mt-5">
+        <p><a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}">login</a> to track your progress and view statistics!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

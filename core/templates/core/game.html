@@ -1,0 +1,203 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ game_type }}{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1>{{ game_type|title }} Typing Test</h1>
+    <div class="stats-container mb-3">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">WPM</h5>
+                        <p id="wpm" class="display-6">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Accuracy</h5>
+                        <p id="accuracy" class="display-6">100%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Time</h5>
+                        <p id="time" class="display-6">60s</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="typing-container">
+    <div id="text-display" class="typing-area"></div>
+    <textarea id="input-field" class="form-control mt-3" rows="3" placeholder="Start typing here..." disabled></textarea>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-3">
+        <button id="start-btn" class="btn btn-primary">Start Test</button>
+        <button id="restart-btn" class="btn btn-secondary" style="display: none;">Restart</button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    class TypingGame {
+        constructor() {
+            this.textDisplay = document.getElementById('text-display');
+            this.inputField = document.getElementById('input-field');
+            this.startButton = document.getElementById('start-btn');
+            this.restartButton = document.getElementById('restart-btn');
+            this.wpmDisplay = document.getElementById('wpm');
+            this.accuracyDisplay = document.getElementById('accuracy');
+            this.timeDisplay = document.getElementById('time');
+            
+            this.gameType = '{{ game_type }}';
+            this.originalText = '';
+            this.timeLeft = 60;
+            this.isRunning = false;
+            this.timer = null;
+            this.startTime = null;
+            this.errors = 0;
+            this.totalCharacters = 0;
+            
+            this.init();
+        }
+        
+        init() {
+            this.startButton.addEventListener('click', () => this.startGame());
+            this.restartButton.addEventListener('click', () => this.restartGame());
+            this.inputField.addEventListener('input', () => this.checkInput());
+        }
+        
+        async startGame() {
+            try {
+                const response = await fetch(`/get_text/${this.gameType}/`);
+                const data = await response.json();
+                this.originalText = data.text;
+                this.textDisplay.textContent = this.originalText;
+                
+                this.inputField.value = '';
+                this.inputField.disabled = false;
+                this.inputField.focus();
+                this.startButton.style.display = 'none';
+                this.restartButton.style.display = 'block';
+                
+                this.isRunning = true;
+                this.startTime = new Date();
+                this.errors = 0;
+                this.totalCharacters = 0;
+                
+                this.timer = setInterval(() => this.updateTimer(), 1000);
+            } catch (error) {
+                console.error('Error fetching text:', error);
+            }
+        }
+        
+        restartGame() {
+            clearInterval(this.timer);
+            this.timeLeft = 60;
+            this.isRunning = false;
+            this.textDisplay.textContent = '';
+            this.inputField.value = '';
+            this.inputField.disabled = true;
+            this.startButton.style.display = 'block';
+            this.restartButton.style.display = 'none';
+            this.wpmDisplay.textContent = '0';
+            this.accuracyDisplay.textContent = '100%';
+            this.timeDisplay.textContent = '60s';
+        }
+        
+        checkInput() {
+            if (!this.isRunning) return;
+            
+            const currentInput = this.inputField.value;
+            this.totalCharacters = currentInput.length;
+            
+            let displayText = '';
+            this.errors = 0;
+            
+            for (let i = 0; i < this.originalText.length; i++) {
+                if (i < currentInput.length) {
+                    if (currentInput[i] === this.originalText[i]) {
+                        displayText += `<span class="correct">${this.originalText[i]}</span>`;
+                    } else {
+                        displayText += `<span class="incorrect">${this.originalText[i]}</span>`;
+                        this.errors++;
+                    }
+                } else {
+                    if (i === currentInput.length) {
+                        displayText += `<span class="current">${this.originalText[i]}</span>`;
+                    } else {
+                        displayText += this.originalText[i];
+                    }
+                }
+            }
+            
+            this.textDisplay.innerHTML = displayText;
+            this.updateStats();
+            
+            if (currentInput.length === this.originalText.length) {
+                this.finishGame();
+            }
+        }
+        
+        updateTimer() {
+            if (this.timeLeft > 0) {
+                this.timeLeft--;
+                this.timeDisplay.textContent = `${this.timeLeft}s`;
+                this.updateStats();
+            } else {
+                this.finishGame();
+            }
+        }
+        
+        updateStats() {
+            const timeElapsed = (new Date() - this.startTime) / 1000 / 60; // in minutes
+            const wordsTyped = this.totalCharacters / 5; // assuming average word length of 5
+            const wpm = Math.round(wordsTyped / timeElapsed);
+            const accuracy = Math.round(((this.totalCharacters - this.errors) / this.totalCharacters) * 100) || 100;
+            
+            this.wpmDisplay.textContent = wpm;
+            this.accuracyDisplay.textContent = `${accuracy}%`;
+        }
+        
+        async finishGame() {
+            clearInterval(this.timer);
+            this.isRunning = false;
+            this.inputField.disabled = true;
+            
+            const wpm = parseInt(this.wpmDisplay.textContent);
+            const accuracy = parseInt(this.accuracyDisplay.textContent);
+            
+            try {
+                await fetch('/save_result/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        game_type: this.gameType,
+                        wpm: wpm,
+                        accuracy: accuracy,
+                        errors: this.errors,
+                        test_text: this.originalText
+                    })
+                });
+            } catch (error) {
+                console.error('Error saving result:', error);
+            }
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        new TypingGame();
+    });
+</script>
+{% endblock %} 
