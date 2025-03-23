@@ -5,196 +5,196 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Typing Speed Test{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-text-color: #00ff41;
-            --neon-border-color: #00ff41;
-            --terminal-bg: #0c0c0c;
-            --terminal-text: #00ff41;
-            --terminal-error: #ff0055;
-            --terminal-success: #00ff41;
-            --terminal-current: #004411;
+            --neon-green: #00ff41;
+            --neon-glow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            --dark-bg: #0a0a0a;
+            --terminal-gray: #33ff33;
+        }
+
+        * {
+            font-family: 'Share Tech Mono', monospace;
         }
 
         body {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: var(--terminal-bg);
-            color: var(--terminal-text);
-            font-family: 'Share Tech Mono', monospace;
-        }
-
-        .navbar {
-            background-color: #000000 !important;
-            border-bottom: 1px solid var(--neon-border-color);
-            box-shadow: 0 0 10px var(--neon-border-color);
-        }
-
-        .navbar-brand, .nav-link {
-            color: var(--neon-text-color) !important;
-            text-shadow: 0 0 5px var(--neon-text-color);
-        }
-
-        .nav-link:hover {
-            text-shadow: 0 0 10px var(--neon-text-color);
-            transform: scale(1.05);
-            transition: all 0.2s ease;
+            background-color: var(--dark-bg);
+            color: var(--neon-green);
         }
 
         .content {
             flex: 1;
-            padding: 20px;
         }
 
+        /* Override Bootstrap defaults */
+        .navbar {
+            background-color: var(--dark-bg) !important;
+            border-bottom: 1px solid var(--neon-green);
+        }
+
+        .navbar-brand, .nav-link, .navbar-nav .nav-link.active {
+            color: var(--neon-green) !important;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Table styles */
+        table {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+        }
+
+        table, th, td, tr {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+            border-color: var(--neon-green) !important;
+        }
+
+        /* Override Bootstrap table styles */
+        .table {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+        }
+
+        .table > :not(caption) > * > * {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) > * {
+            background-color: rgba(0, 255, 65, 0.05) !important;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 255, 65, 0.1) !important;
+        }
+
+        /* Form controls */
+        .form-control {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+            border: 1px solid var(--neon-green) !important;
+        }
+
+        .form-control:focus {
+            border-color: var(--neon-green) !important;
+            box-shadow: none !important;
+        }
+
+        /* Autofill styles */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px var(--dark-bg) inset !important;
+            -webkit-text-fill-color: var(--neon-green) !important;
+            caret-color: var(--neon-green) !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        /* Firefox autofill */
+        input:autofill,
+        input:autofill:hover,
+        input:autofill:focus,
+        input:autofill:active {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+            -webkit-box-shadow: 0 0 0 30px var(--dark-bg) inset !important;
+            -webkit-text-fill-color: var(--neon-green) !important;
+        }
+
+        /* Edge autofill */
+        input:-internal-autofill-selected,
+        input:-internal-autofill-previewed {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+            -webkit-box-shadow: 0 0 0 30px var(--dark-bg) inset !important;
+            -webkit-text-fill-color: var(--neon-green) !important;
+        }
+
+        /* Add these new rules */
+        .form-control:active,
+        .form-control:valid,
+        .form-control[type="text"],
+        .form-control[type="password"] {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+        }
+
+        /* Placeholder text color */
+        .form-control::placeholder {
+            color: rgba(0, 255, 65, 0.5) !important;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+            border: 1px solid var(--neon-green) !important;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Cards */
         .card {
-            background-color: #000000;
-            border: 1px solid var(--neon-border-color);
-            box-shadow: 0 0 10px var(--neon-border-color);
-            margin-bottom: 20px;
+            background-color: var(--dark-bg) !important;
+            border: 1px solid var(--neon-green) !important;
         }
 
-        .card-header {
-            background-color: #000000;
-            border-bottom: 1px solid var(--neon-border-color);
-            color: var(--neon-text-color);
+        .card-header, .card-body, .card-footer {
+            background-color: var(--dark-bg) !important;
+            color: var(--neon-green) !important;
+            border-color: var(--neon-green) !important;
         }
 
-        .card-body {
-            background-color: #000000;
-        }
-
+        /* Typing area specific styles */
         .typing-area {
             font-family: 'Share Tech Mono', monospace;
             font-size: 1.2em;
             line-height: 1.5;
             padding: 20px;
-            background-color: #000000;
-            border: 1px solid var(--neon-border-color);
+            background-color: var(--dark-bg) !important;
+            border: 1px solid var(--neon-green);
             border-radius: 5px;
             margin-bottom: 20px;
             white-space: pre-wrap;
-            color: var(--terminal-text);
-            box-shadow: 0 0 10px var(--neon-border-color);
+            color: var(--terminal-gray);
         }
 
         .correct {
-            color: var(--terminal-success);
-            text-shadow: 0 0 5px var(--terminal-success);
+            color: var(--neon-green);
+            text-shadow: var(--neon-glow);
         }
 
         .incorrect {
-            color: var(--terminal-error);
-            text-shadow: 0 0 5px var(--terminal-error);
-            text-decoration: underline;
+            color: #ff0033;
+            text-shadow: 0 0 10px #ff0033;
         }
 
         .current {
-            background-color: var(--terminal-current);
+            background-color: rgba(0, 255, 65, 0.2);
+            border-bottom: 2px solid var(--neon-green);
         }
 
-        .btn-primary {
-            background-color: #000000;
-            border: 1px solid var(--neon-border-color);
-            color: var(--neon-text-color);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--neon-text-color);
-            color: #000000;
-            box-shadow: 0 0 10px var(--neon-border-color);
-        }
-
-        .btn-secondary {
-            background-color: #000000;
-            border: 1px solid #666;
-            color: #666;
-        }
-
-        .btn-secondary:hover {
-            background-color: #666;
-            color: #000000;
-            box-shadow: 0 0 10px #666;
-        }
-
-        .form-control {
-            background-color: #000000;
-            border: 1px solid var(--neon-border-color);
-            color: var(--terminal-text);
-        }
-
-        .form-control:focus {
-            background-color: #000000;
-            border-color: var(--neon-border-color);
-            box-shadow: 0 0 10px var(--neon-border-color);
-            color: var(--terminal-text);
-        }
-
-        .table {
-            color: var(--terminal-text);
-        }
-
-        .table thead th {
-            border-color: var(--neon-border-color);
-        }
-
-        .table td {
-            border-color: var(--neon-border-color);
-        }
-
+        /* Alert styling */
         .alert {
-            background-color: #000000;
-            border: 1px solid var(--neon-border-color);
-            color: var(--terminal-text);
+            background-color: var(--dark-bg) !important;
+            border: 1px solid var(--neon-green) !important;
+            color: var(--neon-green) !important;
         }
 
-        .alert-success {
-            border-color: var(--terminal-success);
-            color: var(--terminal-success);
-        }
-
-        .alert-danger {
-            border-color: var(--terminal-error);
-            color: var(--terminal-error);
-        }
-
+        /* Footer styling */
         footer {
-            background-color: #000000;
-            border-top: 1px solid var(--neon-border-color);
-            color: var(--terminal-text);
-            text-align: center;
-            padding: 1rem 0;
-            margin-top: auto;
-        }
-
-        /* Terminal cursor animation */
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        .typing-area::after {
-            content: '█';
-            animation: blink 1s infinite;
-        }
-
-        /* Glowing text effect */
-        .display-6 {
-            color: var(--neon-text-color);
-            text-shadow: 0 0 5px var(--neon-text-color);
-        }
-
-        /* Links */
-        a {
-            color: var(--neon-text-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: var(--neon-text-color);
-            text-shadow: 0 0 10px var(--neon-text-color);
+            background-color: var(--dark-bg) !important;
+            border-top: 1px solid var(--neon-green);
         }
 
         /* Custom scrollbar */
@@ -203,16 +203,18 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #000000;
+            background: var(--dark-bg);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--neon-border-color);
+            background: var(--neon-green);
             border-radius: 5px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--terminal-text);
+        /* Text selection */
+        ::selection {
+            background: var(--neon-green);
+            color: var(--dark-bg);
         }
     </style>
 </head>
@@ -264,8 +266,8 @@
         {% block content %}{% endblock %}
     </div>
 
-    <footer>
-        <div class="container">
+    <footer class="py-3">
+        <div class="container text-center">
             <p class="mb-0">&copy; 2024 Typing Speed Test. All rights reserved.</p>
         </div>
     </footer>
